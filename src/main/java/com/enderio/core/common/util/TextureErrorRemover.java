@@ -53,7 +53,7 @@ public class TextureErrorRemover extends Logger {
         if (!Loader.isModLoaded("gtnhlib")) return;
         EnderCore.logger.info("Attempting to initialize texture error message interceptor.");
         try {
-            Fields.ClassFields.Field f = Fields.ofClass(TextureMap.class)
+            Fields.ClassFields<TextureMap>.Field<org.apache.logging.log4j.Logger> f = Fields.ofClass(TextureMap.class)
                     .getField(Fields.LookupType.DECLARED, "logger", org.apache.logging.log4j.Logger.class);
             if (f == null) {
                 f = Fields.ofClass(TextureMap.class)
