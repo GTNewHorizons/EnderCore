@@ -4,8 +4,10 @@ public class Vertex {
 
     public Vector3d xyz = new Vector3d();
 
-    /* some parts of EIO are relying on nulls as special values, can't just pre allocate new objects and
-       set them when required, unless everything relying on nulls is rewritten */
+    /*
+     * some parts of EIO are relying on nulls as special values, can't just pre allocate new objects and set them when
+     * required, unless everything relying on nulls is rewritten
+     */
     public Vector2f uv = null;
     public Vector3f normal = null;
     public Vector4f color = null;
@@ -79,39 +81,36 @@ public class Vertex {
         this.brightness = brightness;
     }
 
-    public void set(Vertex other){
+    public void set(Vertex other) {
         xyz.set(other.xyz);
 
         if (other.uv != null) {
-            if(uv == null){
+            if (uv == null) {
                 uv = new Vector2f(other.uv);
-            }
-            else {
+            } else {
                 uv.set(other.uv);
             }
-        }else{
+        } else {
             uv = null;
         }
 
         if (other.normal != null) {
-            if (normal == null){
+            if (normal == null) {
                 normal = new Vector3f(other.normal);
-            }
-            else {
+            } else {
                 normal.set(other.normal);
             }
-        }else{
+        } else {
             normal = null;
         }
 
         if (other.color != null) {
-            if (color == null){
+            if (color == null) {
                 color = new Vector4f(other.color);
-            }
-            else {
+            } else {
                 color.set(other.color);
             }
-        }else{
+        } else {
             color = null;
         }
 
