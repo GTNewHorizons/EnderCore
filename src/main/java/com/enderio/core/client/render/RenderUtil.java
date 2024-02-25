@@ -377,20 +377,20 @@ public class RenderUtil {
     }
 
     public static void addVerticesToTessellator(Vertex[] vertices, Tessellator tes) {
-        for (Vertex v : vertices) {
-            if (v.brightness != -1) {
-                tes.setBrightness(v.brightness);
+        for (int i = 0; i < vertices.length; i++) {
+            if (vertices[i].brightness != -1) {
+                tes.setBrightness(vertices[i].brightness);
             }
-            if (v.color != null) {
-                tes.setColorRGBA_F(v.r(), v.g(), v.b(), v.a());
+            if (vertices[i].color != null) {
+                tes.setColorRGBA_F(vertices[i].r(), vertices[i].g(), vertices[i].b(), vertices[i].a());
             }
-            if (v.uv != null) {
-                tes.setTextureUV(v.u(), v.v());
+            if (vertices[i].uv != null) {
+                tes.setTextureUV(vertices[i].u(), vertices[i].v());
             }
-            if (v.normal != null) {
-                tes.setNormal(v.nx(), v.ny(), v.nz());
+            if (vertices[i].normal != null) {
+                tes.setNormal(vertices[i].nx(), vertices[i].ny(), vertices[i].nz());
             }
-            tes.addVertex(v.x(), v.y(), v.z());
+            tes.addVertex(vertices[i].x(), vertices[i].y(), vertices[i].z());
         }
     }
 
