@@ -2,6 +2,9 @@ package com.enderio.core.common.transform;
 
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
@@ -12,6 +15,7 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 public class EnderCorePlugin implements IFMLLoadingPlugin {
 
     public static boolean runtimeDeobfEnabled = false;
+    public static final Logger logger = LogManager.getLogger("EnderCore");
 
     @Override
     public String[] getASMTransformerClass() {

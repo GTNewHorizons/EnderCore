@@ -24,8 +24,6 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import com.enderio.core.EnderCore;
-
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
 @MCVersion(value = "1.7.10")
@@ -289,7 +287,7 @@ public class EnderCoreTransformer implements IClassTransformer {
 
     protected final byte[] transform(byte[] classBytes, String className, ObfSafeName methodName,
             Transform transformer) {
-        EnderCore.logger.info("Transforming Class [" + className + "], Method [" + methodName.getName() + "]");
+        EnderCorePlugin.logger.info("Transforming Class [" + className + "], Method [" + methodName.getName() + "]");
 
         ClassNode classNode = new ClassNode();
         ClassReader classReader = new ClassReader(classBytes);
@@ -301,7 +299,7 @@ public class EnderCoreTransformer implements IClassTransformer {
 
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         classNode.accept(cw);
-        EnderCore.logger.info("Transforming " + className + " Finished.");
+        EnderCorePlugin.logger.info("Transforming " + className + " Finished.");
         return cw.toByteArray();
     }
 }

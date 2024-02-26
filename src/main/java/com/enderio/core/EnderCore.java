@@ -28,13 +28,16 @@ import com.enderio.core.common.network.EnderPacketHandler;
 import com.enderio.core.common.util.EnderFileUtils;
 import com.enderio.core.common.util.PermanentCache;
 import com.enderio.core.common.util.TextureErrorRemover;
+import com.enderio.core.compat.nei.EnderCoreContainerObjectHandler;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 
+import codechicken.nei.guihook.GuiContainerManager;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms.IMCEvent;
@@ -63,6 +66,8 @@ public class EnderCore implements IEnderMod {
     @SidedProxy(serverSide = "com.enderio.core.common.CommonProxy", clientSide = "com.enderio.core.client.ClientProxy")
     public static CommonProxy proxy;
 
+    public static boolean isNEILoaded;
+
     public List<IConfigHandler> configs = Lists.newArrayList();
 
     @EventHandler
@@ -74,8 +79,13 @@ public class EnderCore implements IEnderMod {
                     lang.localize("error.ttcore.3"));
         }
 
+        isNEILoaded = Loader.isModLoaded("NotEnoughItems");
+
         if (event.getSide().isClient()) {
             TextureErrorRemover.beginIntercepting();
+            if (isNEILoaded) {
+                registerNEICompat();
+            }
         }
 
         ConfigHandler.configFolder = event.getModConfigurationDirectory();
@@ -155,5 +165,10 @@ public class EnderCore implements IEnderMod {
     @Override
     public String version() {
         return EnderCoreTags.VERSION;
+    }
+
+    @Optional.Method(modid = "NotEnoughItems")
+    private void registerNEICompat() {
+        GuiContainerManager.addObjectHandler(new EnderCoreContainerObjectHandler());
     }
 }

@@ -1,5 +1,7 @@
 package com.enderio.core.client.gui;
 
+import static com.enderio.core.EnderCore.isNEILoaded;
+
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -34,15 +36,10 @@ import codechicken.nei.ItemPanels;
 import codechicken.nei.VisiblityData;
 import codechicken.nei.api.INEIGuiHandler;
 import codechicken.nei.api.TaggedInventoryArea;
-import codechicken.nei.guihook.GuiContainerManager;
-import codechicken.nei.guihook.IContainerObjectHandler;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 
-@Optional.InterfaceList({ @Optional.Interface(iface = "codechicken.nei.api.INEIGuiHandler", modid = "NotEnoughItems"),
-        @Optional.Interface(iface = "codechicken.nei.guihook.IContainerObjectHandler", modid = "NotEnoughItems") })
-public abstract class GuiContainerBase extends GuiContainer
-        implements ToolTipRenderer, IGuiScreen, INEIGuiHandler, IContainerObjectHandler {
+@Optional.Interface(iface = "codechicken.nei.api.INEIGuiHandler", modid = "NotEnoughItems")
+public abstract class GuiContainerBase extends GuiContainer implements ToolTipRenderer, IGuiScreen, INEIGuiHandler {
 
     protected ToolTipManager ttMan = new ToolTipManager();
     protected List<IGuiOverlay> overlays = Lists.newArrayList();
@@ -58,9 +55,6 @@ public abstract class GuiContainerBase extends GuiContainer
 
     protected VScrollbar draggingScrollbar;
 
-    protected static boolean registeredNEIHandler;
-    protected final boolean isNEILoaded = Loader.isModLoaded("NotEnoughItems");
-
     protected GuiContainerBase(Container par1Container) {
         super(par1Container);
     }
@@ -74,11 +68,6 @@ public abstract class GuiContainerBase extends GuiContainer
         }
         for (TextFieldEnder f : textFields) {
             f.init(this);
-        }
-
-        if (isNEILoaded && !registeredNEIHandler) {
-            GuiContainerManager.addObjectHandler(this);
-            registeredNEIHandler = true;
         }
     }
 
@@ -705,40 +694,5 @@ public abstract class GuiContainerBase extends GuiContainer
     @Optional.Method(modid = "NotEnoughItems")
     public boolean hideItemPanelSlot(GuiContainer gc, int x, int y, int w, int h) {
         return false;
-    }
-
-    // IContainerObjectHandler
-
-    @Override
-    @Optional.Method(modid = "NotEnoughItems")
-    public void guiTick(GuiContainer guiContainer) {}
-
-    @Override
-    @Optional.Method(modid = "NotEnoughItems")
-    public void refresh(GuiContainer guiContainer) {}
-
-    @Override
-    @Optional.Method(modid = "NotEnoughItems")
-    public void load(GuiContainer guiContainer) {}
-
-    @Override
-    @Optional.Method(modid = "NotEnoughItems")
-    public ItemStack getStackUnderMouse(GuiContainer guiContainer, int mouseX, int mouseY) {
-        if (guiContainer instanceof GuiContainerBase) {
-            return ((GuiContainerBase) guiContainer).getHoveredStack(mouseX, mouseY);
-        }
-        return null;
-    }
-
-    @Override
-    @Optional.Method(modid = "NotEnoughItems")
-    public boolean objectUnderMouse(GuiContainer guiContainer, int mouseX, int mouseY) {
-        return false;
-    }
-
-    @Override
-    @Optional.Method(modid = "NotEnoughItems")
-    public boolean shouldShowTooltip(GuiContainer guiContainer) {
-        return true;
     }
 }
