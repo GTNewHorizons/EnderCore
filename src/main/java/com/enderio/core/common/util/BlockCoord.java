@@ -131,7 +131,7 @@ public class BlockCoord {
     }
 
     public boolean equals(int x, int y, int z) {
-        return equals(new BlockCoord(x, y, z));
+        return x == this.x && y == this.y && z == this.z;
     }
 
     @Override
