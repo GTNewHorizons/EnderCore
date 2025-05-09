@@ -6,5 +6,5 @@ dependencies {
     compileOnly("curse.maven:cofh-core-69162:2388750-dev:dev")
 
     // for testing
-    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:EnderIO:2.9.8:dev") { transitive = false }
+    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:EnderIO:2.9.12:dev") { transitive = false }
 }
