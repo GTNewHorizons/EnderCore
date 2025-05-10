@@ -59,6 +59,9 @@ public class FluidUtil {
     }
 
     public static IFluidHandler getFluidHandler(IBlockAccess world, int x, int y, int z) {
+        if (world instanceof World && !((World) world).blockExists(x, y, z)) {
+            return null;
+        }
         TileEntity te = world.getTileEntity(x, y, z);
         return getFluidHandler(te);
     }
