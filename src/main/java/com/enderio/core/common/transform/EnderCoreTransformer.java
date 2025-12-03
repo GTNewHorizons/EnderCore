@@ -115,33 +115,6 @@ public class EnderCoreTransformer implements IClassTransformer {
                 }
             });
         }
-        // ItemRarity Event
-        else if (transformedName.equals(itemStackClass)) {
-            basicClass = transform(basicClass, itemStackClass, itemStackMethod, new Transform() {
-
-                @Override
-                void transform(Iterator<MethodNode> methods) {
-                    while (methods.hasNext()) {
-                        MethodNode m = methods.next();
-                        if (itemStackMethod.equals(m.name)) {
-                            m.instructions.clear();
-
-                            m.instructions.add(new VarInsnNode(ALOAD, 0));
-                            m.instructions.add(
-                                    new MethodInsnNode(
-                                            INVOKESTATIC,
-                                            "com/enderio/core/common/transform/EnderCoreMethods",
-                                            "getItemRarity",
-                                            itemStackMethodSig,
-                                            false));
-                            m.instructions.add(new InsnNode(ARETURN));
-
-                            break;
-                        }
-                    }
-                }
-            });
-        }
         // ArrowUpdate Event
         else if (transformedName.equals(entityArrowClass)) {
             basicClass = transform(basicClass, entityArrowClass, entityArrowMethod, new Transform() {

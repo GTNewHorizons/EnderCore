@@ -5,7 +5,6 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerFurnace;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntityFurnace;
@@ -13,18 +12,11 @@ import net.minecraftforge.common.MinecraftForge;
 
 import com.enderio.core.common.config.ConfigHandler;
 import com.enderio.core.common.event.ArrowUpdateEvent;
-import com.enderio.core.common.event.ItemStackEvent.ItemRarityEvent;
 
 public class EnderCoreMethods {
 
     public static int getMaxAnvilCost() {
         return ConfigHandler.anvilMaxLevel;
-    }
-
-    public static EnumRarity getItemRarity(ItemStack stack) {
-        ItemRarityEvent event = new ItemRarityEvent(stack, stack.getItem().getRarity(stack));
-        MinecraftForge.EVENT_BUS.post(event);
-        return event.rarity;
     }
 
     public static void onArrowUpdate(EntityArrow entity) {
