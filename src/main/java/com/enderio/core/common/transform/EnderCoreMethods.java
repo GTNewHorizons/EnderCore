@@ -9,7 +9,6 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.world.WorldType;
 import net.minecraftforge.common.MinecraftForge;
 
 import com.enderio.core.common.config.ConfigHandler;
@@ -17,16 +16,6 @@ import com.enderio.core.common.event.ArrowUpdateEvent;
 import com.enderio.core.common.event.ItemStackEvent.ItemRarityEvent;
 
 public class EnderCoreMethods {
-
-    public static boolean hasVoidParticles(WorldType type, boolean hasSky) {
-        if (ConfigHandler.disableVoidFog == 0) {
-            return type != WorldType.FLAT && !hasSky;
-        } else if (ConfigHandler.disableVoidFog == 1) {
-            return type != WorldType.FLAT && type != WorldType.DEFAULT && !hasSky;
-        } else {
-            return false;
-        }
-    }
 
     public static int getMaxAnvilCost() {
         return ConfigHandler.anvilMaxLevel;

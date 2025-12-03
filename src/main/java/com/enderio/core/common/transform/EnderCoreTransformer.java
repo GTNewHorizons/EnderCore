@@ -4,7 +4,6 @@ import static org.objectweb.asm.Opcodes.ALOAD;
 import static org.objectweb.asm.Opcodes.ARETURN;
 import static org.objectweb.asm.Opcodes.ILOAD;
 import static org.objectweb.asm.Opcodes.INVOKESTATIC;
-import static org.objectweb.asm.Opcodes.IRETURN;
 
 import java.util.Iterator;
 
@@ -87,37 +86,8 @@ public class EnderCoreTransformer implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
-        // Void fog removal
-        if (transformedName.equals(worldTypeClass)) {
-            basicClass = transform(basicClass, worldTypeClass, voidFogMethod, new Transform() {
-
-                @Override
-                void transform(Iterator<MethodNode> methods) {
-                    while (methods.hasNext()) {
-                        MethodNode m = methods.next();
-                        if (voidFogMethod.equals(m.name)) {
-                            m.localVariables.clear();
-                            m.instructions.clear();
-
-                            m.instructions.add(new VarInsnNode(ALOAD, 0));
-                            m.instructions.add(new VarInsnNode(ILOAD, 1));
-                            m.instructions.add(
-                                    new MethodInsnNode(
-                                            INVOKESTATIC,
-                                            "com/enderio/core/common/transform/EnderCoreMethods",
-                                            "hasVoidParticles",
-                                            voidFogMethodSig,
-                                            false));
-                            m.instructions.add(new InsnNode(IRETURN));
-
-                            break;
-                        }
-                    }
-                }
-            });
-        }
         // Anvil max level
-        else if (transformedName.equals(anvilContainerClass) || transformedName.equals(anvilGuiClass)) {
+        if (transformedName.equals(anvilContainerClass) || transformedName.equals(anvilGuiClass)) {
             basicClass = transform(basicClass, anvilContainerClass, anvilContainerMethod, new Transform() {
 
                 @Override
