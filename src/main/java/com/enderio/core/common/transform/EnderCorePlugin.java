@@ -5,9 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
@@ -16,12 +13,9 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 @MCVersion("1.7.10")
 public class EnderCorePlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
-    public static boolean runtimeDeobfEnabled = false;
-    public static final Logger logger = LogManager.getLogger("EnderCore");
-
     @Override
     public String[] getASMTransformerClass() {
-        return new String[] { "com.enderio.core.common.transform.EnderCoreTransformer" };
+        return null;
     }
 
     @Override
@@ -35,9 +29,7 @@ public class EnderCorePlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
     }
 
     @Override
-    public void injectData(Map<String, Object> data) {
-        runtimeDeobfEnabled = (Boolean) data.get("runtimeDeobfuscationEnabled");
-    }
+    public void injectData(Map<String, Object> data) {}
 
     @Override
     public String getAccessTransformerClass() {
