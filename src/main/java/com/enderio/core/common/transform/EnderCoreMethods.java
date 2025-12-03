@@ -14,7 +14,6 @@ import net.minecraftforge.common.MinecraftForge;
 
 import com.enderio.core.common.config.ConfigHandler;
 import com.enderio.core.common.event.ArrowUpdateEvent;
-import com.enderio.core.common.event.ItemStackEvent.ItemEnchantabilityEvent;
 import com.enderio.core.common.event.ItemStackEvent.ItemRarityEvent;
 
 public class EnderCoreMethods {
@@ -31,12 +30,6 @@ public class EnderCoreMethods {
 
     public static int getMaxAnvilCost() {
         return ConfigHandler.anvilMaxLevel;
-    }
-
-    public static int getItemEnchantability(ItemStack stack, int base) {
-        ItemEnchantabilityEvent event = new ItemEnchantabilityEvent(stack, base);
-        MinecraftForge.EVENT_BUS.post(event);
-        return event.enchantability;
     }
 
     public static EnumRarity getItemRarity(ItemStack stack) {

@@ -5,11 +5,8 @@ import static org.objectweb.asm.Opcodes.ARETURN;
 import static org.objectweb.asm.Opcodes.ILOAD;
 import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 import static org.objectweb.asm.Opcodes.IRETURN;
-import static org.objectweb.asm.Opcodes.ISTORE;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 
@@ -24,9 +21,6 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
-
-@MCVersion(value = "1.7.10")
 public class EnderCoreTransformer implements IClassTransformer {
 
     protected static class ObfSafeName {
@@ -150,49 +144,6 @@ public class EnderCoreTransformer implements IClassTransformer {
                     }
                 }
             });
-        }
-        // Item Enchantability Event
-        else if (transformedName.equals(enchantHelperClass)) {
-            final Map<String, int[]> data = new HashMap<String, int[]>();
-            data.put(buildEnchantListMethod.getName(), new int[] { 1, 4 });
-            data.put(calcEnchantabilityMethod.getName(), new int[] { 3, 5 });
-            Transform transformer = new Transform() {
-
-                @Override
-                void transform(Iterator<MethodNode> methods) {
-                    while (methods.hasNext()) {
-                        MethodNode m = methods.next();
-                        if (data.keySet().contains(m.name)) {
-                            int[] indeces = data.get(m.name);
-                            for (int i = 0; i < m.instructions.size(); i++) {
-                                AbstractInsnNode next = m.instructions.get(i);
-                                if (next instanceof VarInsnNode) {
-                                    VarInsnNode varNode = (VarInsnNode) next;
-                                    if (varNode.getOpcode() == ISTORE && varNode.var == indeces[1]) {
-                                        InsnList toAdd = new InsnList();
-                                        toAdd.add(new VarInsnNode(ALOAD, indeces[0]));
-                                        toAdd.add(new VarInsnNode(ILOAD, indeces[1]));
-                                        toAdd.add(
-                                                new MethodInsnNode(
-                                                        INVOKESTATIC,
-                                                        "com/enderio/core/common/transform/EnderCoreMethods",
-                                                        "getItemEnchantability",
-                                                        enchantHelperMethodSig,
-                                                        false));
-                                        toAdd.add(new VarInsnNode(ISTORE, indeces[1]));
-                                        m.instructions.insert(next, toAdd);
-                                        break;
-                                    }
-                                }
-                            }
-
-                            break;
-                        }
-                    }
-                }
-            };
-
-            basicClass = transform(basicClass, enchantHelperClass, buildEnchantListMethod, transformer);
         }
         // ItemRarity Event
         else if (transformedName.equals(itemStackClass)) {

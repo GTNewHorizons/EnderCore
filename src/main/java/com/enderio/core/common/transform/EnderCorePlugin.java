@@ -52,6 +52,7 @@ public class EnderCorePlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
     @Override
     public List<String> getMixins(Set<String> loadedCoreMods) {
         final List<String> mixins = new ArrayList<>();
+        mixins.add("MixinItem_EnchantabilityEvent");
         return mixins;
     }
 }
