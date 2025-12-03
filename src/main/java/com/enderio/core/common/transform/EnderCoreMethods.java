@@ -1,26 +1,19 @@
 package com.enderio.core.common.transform;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerFurnace;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraftforge.common.MinecraftForge;
 
 import com.enderio.core.common.config.ConfigHandler;
-import com.enderio.core.common.event.ArrowUpdateEvent;
 
 public class EnderCoreMethods {
 
     public static int getMaxAnvilCost() {
         return ConfigHandler.anvilMaxLevel;
-    }
-
-    public static void onArrowUpdate(EntityArrow entity) {
-        MinecraftForge.EVENT_BUS.post(new ArrowUpdateEvent(entity));
     }
 
     // mostly copied from ContainerFurnace

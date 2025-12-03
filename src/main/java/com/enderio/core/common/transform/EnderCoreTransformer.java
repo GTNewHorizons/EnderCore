@@ -13,7 +13,6 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
@@ -53,10 +52,6 @@ public class EnderCoreTransformer implements IClassTransformer {
         abstract void transform(Iterator<MethodNode> methods);
     }
 
-    private static final String worldTypeClass = "net.minecraft.world.WorldType";
-    private static final ObfSafeName voidFogMethod = new ObfSafeName("hasVoidParticles", "func_76564_j");
-    private static final String voidFogMethodSig = "(Lnet/minecraft/world/WorldType;Z)Z";
-
     private static final String anvilContainerClass = "net.minecraft.inventory.ContainerRepair";
     private static final ObfSafeName anvilContainerMethod = new ObfSafeName("updateRepairOutput", "func_82848_d");
 
@@ -64,21 +59,6 @@ public class EnderCoreTransformer implements IClassTransformer {
     private static final ObfSafeName anvilGuiMethod = new ObfSafeName(
             "drawGuiContainerForegroundLayer",
             "func_146979_b");
-
-    private static final String enchantHelperClass = "net.minecraft.enchantment.EnchantmentHelper";
-    private static final String enchantHelperMethodSig = "(Lnet/minecraft/item/ItemStack;I)I";
-    private static final ObfSafeName buildEnchantListMethod = new ObfSafeName("buildEnchantmentList", "func_77513_b");
-    private static final ObfSafeName calcEnchantabilityMethod = new ObfSafeName(
-            "calcItemStackEnchantability",
-            "func_77514_a");
-
-    private static final String itemStackClass = "net.minecraft.item.ItemStack";
-    private static final ObfSafeName itemStackMethod = new ObfSafeName("getRarity", "func_77953_t");
-    private static final String itemStackMethodSig = "(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/item/EnumRarity;";
-
-    private static final String entityArrowClass = "net.minecraft.entity.projectile.EntityArrow";
-    private static final ObfSafeName entityArrowMethod = new ObfSafeName("onUpdate", "func_70071_h_");
-    private static final String entityArrowMethodSig = "(Lnet/minecraft/entity/projectile/EntityArrow;)V";
 
     private static final String containerFurnaceClass = "net.minecraft.inventory.ContainerFurnace";
     private static final ObfSafeName containerFurnaceMethod = new ObfSafeName("transferStackInSlot", "func_82846_b");
@@ -110,37 +90,6 @@ public class EnderCoreTransformer implements IClassTransformer {
                                                     false));
                                 }
                             }
-                        }
-                    }
-                }
-            });
-        }
-        // ArrowUpdate Event
-        else if (transformedName.equals(entityArrowClass)) {
-            basicClass = transform(basicClass, entityArrowClass, entityArrowMethod, new Transform() {
-
-                @Override
-                void transform(Iterator<MethodNode> methods) {
-                    while (methods.hasNext()) {
-                        MethodNode m = methods.next();
-                        if (entityArrowMethod.equals(m.name)) {
-                            for (int i = 0; i < m.instructions.size(); i++) {
-                                AbstractInsnNode next = m.instructions.get(i);
-                                if (next instanceof MethodInsnNode) {
-                                    InsnList toAdd = new InsnList();
-                                    toAdd.add(new VarInsnNode(ALOAD, 0));
-                                    toAdd.add(
-                                            new MethodInsnNode(
-                                                    INVOKESTATIC,
-                                                    "com/enderio/core/common/transform/EnderCoreMethods",
-                                                    "onArrowUpdate",
-                                                    entityArrowMethodSig,
-                                                    false));
-                                    m.instructions.insert(next, toAdd);
-                                    break;
-                                }
-                            }
-                            break;
                         }
                     }
                 }
