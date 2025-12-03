@@ -60,10 +60,6 @@ public class EnderCoreTransformer implements IClassTransformer {
             "drawGuiContainerForegroundLayer",
             "func_146979_b");
 
-    private static final String containerFurnaceClass = "net.minecraft.inventory.ContainerFurnace";
-    private static final ObfSafeName containerFurnaceMethod = new ObfSafeName("transferStackInSlot", "func_82846_b");
-    private static final String containerFurnaceMethodSig = "(Lnet/minecraft/inventory/ContainerFurnace;Lnet/minecraft/entity/player/EntityPlayer;I)Lnet/minecraft/item/ItemStack;";
-
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         // Anvil max level
@@ -90,35 +86,6 @@ public class EnderCoreTransformer implements IClassTransformer {
                                                     false));
                                 }
                             }
-                        }
-                    }
-                }
-            });
-        }
-        // Furnace Shift Click Fix
-        else if (transformedName.equals(containerFurnaceClass)) {
-            basicClass = transform(basicClass, containerFurnaceClass, containerFurnaceMethod, new Transform() {
-
-                @Override
-                void transform(Iterator<MethodNode> methods) {
-                    while (methods.hasNext()) {
-                        MethodNode m = methods.next();
-                        if (containerFurnaceMethod.equals(m.name)) {
-                            m.instructions.clear();
-
-                            m.instructions.add(new VarInsnNode(ALOAD, 0));
-                            m.instructions.add(new VarInsnNode(ALOAD, 1));
-                            m.instructions.add(new VarInsnNode(ILOAD, 2));
-                            m.instructions.add(
-                                    new MethodInsnNode(
-                                            INVOKESTATIC,
-                                            "com/enderio/core/common/transform/EnderCoreMethods",
-                                            "transferStackInSlot",
-                                            containerFurnaceMethodSig,
-                                            false));
-                            m.instructions.add(new InsnNode(ARETURN));
-
-                            break;
                         }
                     }
                 }
