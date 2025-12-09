@@ -1,25 +1,21 @@
 package com.enderio.core.common.transform;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
-@SuppressWarnings("unused")
 @MCVersion("1.7.10")
-@IFMLLoadingPlugin.SortingIndex(Integer.MAX_VALUE)
-// we want deobf no matter what
-public class EnderCorePlugin implements IFMLLoadingPlugin {
-
-    public static boolean runtimeDeobfEnabled = false;
-    public static final Logger logger = LogManager.getLogger("EnderCore");
+public class EnderCorePlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[] { "com.enderio.core.common.transform.EnderCoreTransformer" };
+        return null;
     }
 
     @Override
@@ -33,12 +29,24 @@ public class EnderCorePlugin implements IFMLLoadingPlugin {
     }
 
     @Override
-    public void injectData(Map<String, Object> data) {
-        runtimeDeobfEnabled = (Boolean) data.get("runtimeDeobfuscationEnabled");
-    }
+    public void injectData(Map<String, Object> data) {}
 
     @Override
     public String getAccessTransformerClass() {
         return null;
+    }
+
+    @Override
+    public String getMixinConfig() {
+        return "mixins.endercore.early.json";
+    }
+
+    @Override
+    public List<String> getMixins(Set<String> loadedCoreMods) {
+        final List<String> mixins = new ArrayList<>();
+        mixins.add("MixinItem_EnchantabilityEvent");
+        mixins.add("MixinItemStack_RarityEvent");
+        mixins.add("MixinEntityArrow_UpdateEvent");
+        return mixins;
     }
 }
