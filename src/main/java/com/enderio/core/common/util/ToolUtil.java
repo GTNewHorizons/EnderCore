@@ -52,7 +52,7 @@ public class ToolUtil {
                     .clamp((EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack)), 0, 4);
             int costRF = sickle.energyPerUse * (5 - unbreakingLevel) / 5;
 
-            if (sickle.getEnergyStored(stack) > costRF) {
+            if (sickle.getEnergyStored(stack) >= costRF) {
                 sickle.extractEnergy(
                         stack,
                         isEmpowered ? sickle.energyPerUseCharged * (5 - unbreakingLevel) / 5
