@@ -5,10 +5,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTool;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
@@ -19,11 +16,8 @@ import com.enderio.core.common.Handlers.Handler;
 import com.enderio.core.common.config.ConfigHandler;
 import com.enderio.core.common.util.ItemUtil;
 import com.enderio.core.common.util.ToolUtil;
-import com.github.elenterius.magianaturalis.item.artifact.SickleItem;
 import com.google.common.collect.Lists;
 
-import cofh.core.item.tool.ItemSickleAdv;
-import cofh.redstonearsenal.item.tool.ItemSickleRF;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -75,7 +69,7 @@ public class RightClickCropHandler {
         int meta = event.world.getBlockMetadata(x, y, z);
 
         ItemStack stack = event.entityPlayer.getHeldItem();
-        int range = getRange(stack);
+        int range = ToolUtil.getRange(stack);
 
         boolean handHarvest = ConfigHandler.allowCropRC && (stack == null && !event.entityPlayer.isSneaking());
         boolean sickleHarvest = ConfigHandler.allowSickleRC && range > 0;
@@ -106,7 +100,7 @@ public class RightClickCropHandler {
                                             event.setCanceled(true);
                                         }
                         }
-                        damageDurability(stack, cropsHarvested, event.entityPlayer);
+                        ToolUtil.damageDurability(stack, cropsHarvested, event.entityPlayer);
                     }
                     break;
                 }
@@ -129,29 +123,4 @@ public class RightClickCropHandler {
         }
     }
 
-    public int getRange(ItemStack tool) {
-        if (tool != null) {
-            Item item = tool.getItem();
-            int defaultValue = 3;
-
-            // Magia Naturalis
-            if (item instanceof SickleItem) return defaultValue;
-
-            // Redstone Arsenal
-            if (item instanceof ItemSickleRF) {
-                if (!ToolUtil.canDoEnergyOperations(tool)) return 1;
-                else if (((ItemSickleRF) item).isEmpowered(tool)) return 5;
-            }
-
-            // Thermal Foundation
-            if (item instanceof ItemSickleAdv) return ((ItemSickleAdv) item).radius;
-        }
-        return 0;
-    }
-
-    public void damageDurability(ItemStack tool, int cropsHarvested, EntityPlayer player) {
-        if (ToolUtil.usesEnergy(tool, cropsHarvested)) return;
-
-        if (tool.getItem() instanceof ItemTool) tool.damageItem(cropsHarvested, player);
-    }
 }
