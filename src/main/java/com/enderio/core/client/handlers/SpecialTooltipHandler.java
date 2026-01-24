@@ -25,7 +25,10 @@ import com.enderio.core.common.Handlers.Handler;
 import com.enderio.core.common.util.ItemUtil;
 import com.google.common.collect.Lists;
 
+import codechicken.microblock.ItemSaw;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import team.chisel.item.chisel.ItemChisel;
 
 @Handler
 public enum SpecialTooltipHandler {
@@ -93,6 +96,18 @@ public enum SpecialTooltipHandler {
                 || item instanceof ItemHoe
                 || item instanceof ItemBow) {
             toolTip.add(ItemUtil.getDurabilityString(itemStack));
+        }
+
+        if (Loader.isModLoaded("chisel")) {
+            if (item instanceof ItemChisel) {
+                toolTip.add(ItemUtil.getDurabilityString(itemStack));
+            }
+        }
+
+        if (Loader.isModLoaded("ForgeMultipart")) {
+            if (item instanceof ItemSaw) {
+                toolTip.add(ItemUtil.getDurabilityString(itemStack));
+            }
         }
     }
 
