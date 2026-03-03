@@ -25,6 +25,11 @@ public enum DyeColor {
     ORANGE,
     WHITE;
 
+    /**
+     * Cached values() array for frequent read-only operations, the array should NOT be mutated.
+     */
+    public static final DyeColor[] VALUES = values();
+
     public static final String[] DYE_ORE_NAMES = { "dyeBlack", "dyeRed", "dyeGreen", "dyeBrown", "dyeBlue", "dyePurple",
             "dyeCyan", "dyeLightGray", "dyeGray", "dyePink", "dyeLime", "dyeYellow", "dyeLightBlue", "dyeMagenta",
             "dyeOrange", "dyeWhite" };
@@ -42,10 +47,10 @@ public enum DyeColor {
 
     public static DyeColor getNext(DyeColor col) {
         int ord = col.ordinal() + 1;
-        if (ord >= DyeColor.values().length) {
+        if (ord >= DyeColor.VALUES.length) {
             ord = 0;
         }
-        return DyeColor.values()[ord];
+        return DyeColor.VALUES[ord];
     }
 
     public static DyeColor getColorFromDye(ItemStack dye) {
@@ -57,7 +62,7 @@ public enum DyeColor {
             int dyeID = OreDictionary.getOreID(DYE_ORE_NAMES[i]);
             for (int oreId : oreIDs) {
                 if (dyeID == oreId) {
-                    return DyeColor.values()[i];
+                    return DyeColor.VALUES[i];
                 }
             }
         }
@@ -65,7 +70,7 @@ public enum DyeColor {
     }
 
     public static DyeColor fromIndex(int index) {
-        return DyeColor.values()[index];
+        return DyeColor.VALUES[index];
     }
 
     private DyeColor() {}
