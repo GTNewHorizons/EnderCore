@@ -87,8 +87,8 @@ public class ColorButton extends IconButton {
 
     public void setColorIndex(int colorIndex) {
         this.colorIndex = MathHelper.clamp_int(colorIndex, 0, ItemDye.field_150923_a.length - 1);
-        String colStr = DyeColor.values()[colorIndex].getLocalisedName();
-        if (tooltipPrefix != null && tooltipPrefix.length() > 0) {
+        String colStr = DyeColor.VALUES[colorIndex].getLocalisedName();
+        if (tooltipPrefix != null && !tooltipPrefix.isEmpty()) {
             setToolTip(tooltipPrefix, colStr);
         } else {
             setToolTip(colStr);
