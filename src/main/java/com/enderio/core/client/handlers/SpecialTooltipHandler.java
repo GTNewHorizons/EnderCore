@@ -35,6 +35,9 @@ public enum SpecialTooltipHandler {
 
     INSTANCE;
 
+    private static boolean CHISEL = Loader.isModLoaded("chisel");
+    private static final boolean FORGE_MULTIPART = Loader.isModLoaded("ForgeMultipart");
+
     public interface ITooltipCallback extends IAdvancedTooltipProvider {
 
         boolean shouldHandleItem(ItemStack item);
@@ -98,13 +101,17 @@ public enum SpecialTooltipHandler {
             toolTip.add(ItemUtil.getDurabilityString(itemStack));
         }
 
-        if (Loader.isModLoaded("chisel")) {
-            if (item instanceof ItemChisel) {
-                toolTip.add(ItemUtil.getDurabilityString(itemStack));
-            }
+        if (CHISEL) {
+            try {
+                if (item instanceof ItemChisel) {
+                    toolTip.add(ItemUtil.getDurabilityString(itemStack));
+                }
+            } catch (NoClassDefFoundError ignored) {
+                CHISEL = false;
+            } // Class is not present in Chisel 1
         }
 
-        if (Loader.isModLoaded("ForgeMultipart")) {
+        if (FORGE_MULTIPART) {
             if (item instanceof ItemSaw) {
                 toolTip.add(ItemUtil.getDurabilityString(itemStack));
             }
