@@ -106,15 +106,13 @@ public enum SpecialTooltipHandler {
                 if (item instanceof ItemChisel) {
                     toolTip.add(ItemUtil.getDurabilityString(itemStack));
                 }
-            } catch (NoClassDefFoundError ignored) {
+            } catch (NoClassDefFoundError ignored) { // Class is not present in Chisel 1
                 CHISEL = false;
-            } // Class is not present in Chisel 1
+            }
         }
 
-        if (FORGE_MULTIPART) {
-            if (item instanceof ItemSaw) {
-                toolTip.add(ItemUtil.getDurabilityString(itemStack));
-            }
+        if (FORGE_MULTIPART && item instanceof ItemSaw) {
+            toolTip.add(ItemUtil.getDurabilityString(itemStack));
         }
     }
 
