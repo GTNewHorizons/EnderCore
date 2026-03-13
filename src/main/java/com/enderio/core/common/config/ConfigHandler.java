@@ -49,8 +49,12 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     public static boolean betterAchievements = true;
 
     @Config
-    @Comment("Disabling this option will prevent any crops added to the config json from being right clickable.")
+    @Comment("Disabling this option will prevent any crops added to the config json from being right clickable with an empty hand.")
     public static boolean allowCropRC = true;
+
+    @Config
+    @Comment("Enabling this option will allow Sickle tools to AoE right click harvest any crops added to the config json.")
+    public static boolean allowSickleRC = false;
 
     @Config
     @Comment("Prevent tick speedup (i.e. torcherino) on any TE that uses the base TE class from EnderCore")
