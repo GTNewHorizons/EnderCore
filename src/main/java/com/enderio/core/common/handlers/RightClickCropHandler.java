@@ -82,7 +82,6 @@ public class RightClickCropHandler {
                         event.entityPlayer.swingItem();
                     } else {
                         int fortune = 0;
-                        int cropsHarvested = 0;
 
                         if (sickleHarvest) {
                             fortune = EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack);
@@ -94,13 +93,14 @@ public class RightClickCropHandler {
                                         && event.world.getBlockMetadata(i, y, k) == info.meta) {
                                             currentPlant = info;
                                             block.dropBlockAsItem(event.world, i, y, k, meta, fortune);
-                                            cropsHarvested++;
                                             currentPlant = null;
                                             event.world.setBlockMetadataWithNotify(i, y, k, info.resetMeta, 3);
                                             event.setCanceled(true);
+
+                                            if (!ToolUtil.damageDurability(stack, event.entityPlayer)) return;
                                         }
+
                         }
-                        ToolUtil.damageDurability(stack, cropsHarvested, event.entityPlayer);
                     }
                     break;
                 }

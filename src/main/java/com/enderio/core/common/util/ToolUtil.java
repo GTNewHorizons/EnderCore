@@ -28,7 +28,7 @@ public class ToolUtil {
             if (isMagiaNaturalisLoaded && item instanceof SickleItem) return defaultValue;
 
             if (isRedstoneArsenalLoaded && item instanceof ItemSickleRF) {
-                if (!ToolUtil.canDoEnergyOperations(tool)) return 1;
+                if (!ToolUtil.canDoEnergyOperations(tool, true)) return 1;
                 else if (((ItemSickleRF) item).isEmpowered(tool)) return 5;
             }
 
@@ -37,27 +37,14 @@ public class ToolUtil {
         return 0;
     }
 
-    public static void damageDurability(ItemStack tool, int cropsHarvested, EntityPlayer player) {
-        if (ToolUtil.usesEnergy(tool, cropsHarvested)) return;
+    public static boolean damageDurability(ItemStack stack, EntityPlayer player) {
+        if (stack != null) {
+            Item tool = stack.getItem();
+            if (ToolUtil.isRedstoneArsenalLoaded && tool instanceof ItemSickleRF)
+                return ToolUtil.canDoEnergyOperations(stack, false);
 
-        if (tool != null && tool.getItem() instanceof ItemTool) tool.damageItem(cropsHarvested, player);
-    }
-
-    public static boolean canDoEnergyOperations(ItemStack stack) {
-        if (ToolUtil.isRedstoneArsenalLoaded && stack.getItem() instanceof ItemSickleRF) {
-            ItemSickleRF sickle = (ItemSickleRF) stack.getItem();
-
-            boolean isEmpowered = sickle.isEmpowered(stack);
-            int unbreakingLevel = MathHelper
-                    .clamp((EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack)), 0, 4);
-            int costRF = sickle.energyPerUse * (5 - unbreakingLevel) / 5;
-
-            if (sickle.getEnergyStored(stack) >= costRF) {
-                sickle.extractEnergy(
-                        stack,
-                        isEmpowered ? sickle.energyPerUseCharged * (5 - unbreakingLevel) / 5
-                                : sickle.energyPerUse * (5 - unbreakingLevel) / 5,
-                        false);
+            if (tool instanceof ItemTool && tool.isDamageable()) {
+                stack.damageItem(1, player);
                 return true;
             }
         }
@@ -65,17 +52,23 @@ public class ToolUtil {
         return false;
     }
 
-    public static boolean usesEnergy(ItemStack tool, int cropsHarvested) {
-        if (ToolUtil.isRedstoneArsenalLoaded && tool.getItem() instanceof ItemSickleRF) {
-            ItemSickleRF RFTool = (ItemSickleRF) tool.getItem();
-            int unbreakingLvl = MathHelper
-                    .clamp(EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, tool), 0, 4);
-            int RFCost = RFTool.isEmpowered(tool) ? RFTool.energyPerUseCharged * (5 - unbreakingLvl) / 5
-                    : RFTool.energyPerUse * (5 - unbreakingLvl) / 5;
+    public static boolean canDoEnergyOperations(ItemStack stack, boolean simulate) {
+        ItemSickleRF sickle = (ItemSickleRF) stack.getItem();
 
-            RFTool.extractEnergy(tool, RFCost, false);
-            return true;
+        if (sickle != null) {
+            boolean isEmpowered = sickle.isEmpowered(stack);
+
+            int unbreakingLevel = MathHelper
+                    .clamp((EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack)), 0, 4);
+
+            int costRF = (isEmpowered ? sickle.energyPerUseCharged : sickle.energyPerUse) * (5 - unbreakingLevel) / 5;
+
+            if (sickle.getEnergyStored(stack) >= costRF) {
+                if (!simulate) sickle.extractEnergy(stack, costRF, false);
+                return true;
+            }
         }
+
         return false;
     }
 }
