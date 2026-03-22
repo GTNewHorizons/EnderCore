@@ -40,7 +40,7 @@ public class ToolUtil {
     public static void damageDurability(ItemStack tool, int cropsHarvested, EntityPlayer player) {
         if (ToolUtil.usesEnergy(tool, cropsHarvested)) return;
 
-        if (tool.getItem() instanceof ItemTool) tool.damageItem(cropsHarvested, player);
+        if (tool != null && tool.getItem() instanceof ItemTool) tool.damageItem(cropsHarvested, player);
     }
 
     public static boolean canDoEnergyOperations(ItemStack stack) {
