@@ -3,7 +3,10 @@ package com.enderio.core.common.handlers;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
@@ -12,6 +15,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import com.enderio.core.common.Handlers.Handler;
 import com.enderio.core.common.config.ConfigHandler;
 import com.enderio.core.common.util.ItemUtil;
+import com.enderio.core.common.util.ToolUtil;
 import com.google.common.collect.Lists;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -63,18 +67,40 @@ public class RightClickCropHandler {
         int x = event.x, y = event.y, z = event.z;
         Block block = event.world.getBlock(x, y, z);
         int meta = event.world.getBlockMetadata(x, y, z);
-        if (ConfigHandler.allowCropRC && event.action == Action.RIGHT_CLICK_BLOCK
-                && (event.entityPlayer.getHeldItem() == null || !event.entityPlayer.isSneaking())) {
+
+        ItemStack stack = event.entityPlayer.getHeldItem();
+        int range = ToolUtil.getRange(stack);
+
+        boolean handHarvest = ConfigHandler.allowCropRC && (stack == null && !event.entityPlayer.isSneaking());
+        boolean sickleHarvest = ConfigHandler.allowSickleRC && range > 0;
+
+        if ((handHarvest || sickleHarvest) && event.action == Action.RIGHT_CLICK_BLOCK
+                && !(event.entityPlayer instanceof FakePlayer)) {
             for (PlantInfo info : plants) {
                 if (info.blockInst == block && meta == info.meta) {
                     if (event.world.isRemote) {
                         event.entityPlayer.swingItem();
                     } else {
-                        currentPlant = info;
-                        block.dropBlockAsItem(event.world, x, y, z, meta, 0);
-                        currentPlant = null;
-                        event.world.setBlockMetadataWithNotify(x, y, z, info.resetMeta, 3);
-                        event.setCanceled(true);
+                        int fortune = 0;
+
+                        if (sickleHarvest) {
+                            fortune = EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack);
+                        }
+
+                        for (int i = x - range; i <= x + range; i++) {
+                            for (int k = z - range; k <= z + range; k++)
+                                if (info.blockInst == event.world.getBlock(i, y, k)
+                                        && event.world.getBlockMetadata(i, y, k) == info.meta) {
+                                            currentPlant = info;
+                                            block.dropBlockAsItem(event.world, i, y, k, meta, fortune);
+                                            currentPlant = null;
+                                            event.world.setBlockMetadataWithNotify(i, y, k, info.resetMeta, 3);
+                                            event.setCanceled(true);
+
+                                            if (!ToolUtil.damageDurability(stack, event.entityPlayer)) return;
+                                        }
+
+                        }
                     }
                     break;
                 }
@@ -96,4 +122,5 @@ public class RightClickCropHandler {
             }
         }
     }
+
 }
