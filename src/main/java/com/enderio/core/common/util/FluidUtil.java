@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -14,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -89,6 +92,14 @@ public class FluidUtil {
                 Fluid fluid = ((IFluidBlock) Block.getBlockFromItem(stack.getItem())).getFluid();
                 if (fluid != null) {
                     return new FluidStack(fluid, 1000);
+                }
+            }
+            if (fluidStack == null && Block.getBlockFromItem(stack.getItem()) instanceof BlockLiquid) {
+                Material material = Block.getBlockFromItem(stack.getItem()).getMaterial();
+                if (material == Material.water) {
+                    return new FluidStack(FluidRegistry.WATER, 1000);
+                } else if (material == Material.lava) {
+                    return new FluidStack(FluidRegistry.LAVA, 1000);
                 }
             }
             if (fluidStack == null && Loader.isModLoaded("NotEnoughItems")) {
